@@ -9,9 +9,9 @@ const fastify = require("fastify")({
 const couchbase = require("couchbase");
 fastify.register(require("@fastify/cors"));
 
-const clusterConnStr = "couchbases://cb.w12npjniiyudd-sg.cloud.couchbase.com"; // Update with your real connection string
-const username = "appuser"; // Replace with your Couchbase username
-const password = "StrongPassword123!"; // Replace with your Couchbase password
+const clusterConnStr = "couchbases://cb.w12npjniiyudd-sg.cloud.couchbase.com"; 
+const username = "appuser"; 
+const password = "StrongPassword123!"; 
 const bucketName = "catalog";
 
 let cluster, bucket;
@@ -112,6 +112,25 @@ fastify.get("/search", async (request, reply) => {
     reply.status(500).send({ error: err.message });
   }
 });
+
+// Couchbase top 5 products API
+fastify.get("/top-products", async (request, reply) => {
+  try {
+    const result = await cluster.query(`
+      SELECT name, category, price, rating, stock 
+      FROM \`catalog\`.\`inventory\`.\`products\` 
+      ORDER BY rating DESC 
+      LIMIT 5
+    `);
+
+    const products = result.rows;
+    return reply.send(products);
+  } catch (err) {
+    console.error("Error fetching top products:", err);
+    reply.status(500).send({ error: "Failed to fetch top products" });
+  }
+});
+
 
 // Start server
 fastify.listen({ port: process.env.PORT, host: "0.0.0.0" }, function (err, address) {
