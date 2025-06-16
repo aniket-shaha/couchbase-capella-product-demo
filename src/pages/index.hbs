@@ -34,12 +34,14 @@
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const query = document.getElementById("query").value.trim();
+        const API_BASE_URL = "https://capella-search-api.glitch.me";
+
         if (!query) return;
 
         resultsContainer.innerHTML = `<p class="text-gray-400">Searching for "<strong>${query}</strong>"...</p>`;
 
         try {
-          const res = await fetch("/search?q=" + encodeURIComponent(query));
+          const res = await fetch(`${API_BASE_URL}/search?q=` + encodeURIComponent(query));
           const data = await res.json();
 
           if (!data.length) {
