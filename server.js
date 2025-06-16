@@ -117,7 +117,7 @@ fastify.get("/search", async (request, reply) => {
 fastify.get("/top-products", async (request, reply) => {
   try {
     const result = await cluster.query(`
-      SELECT name, category, price, rating, stock 
+      SELECT name, category, price, rating, stock, image_url 
       FROM \`catalog\`.\`inventory\`.\`products\` 
       ORDER BY rating DESC 
       LIMIT 5

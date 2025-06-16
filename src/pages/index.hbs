@@ -1,68 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Capella Product Search</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center px-4 py-6 font-sans">
-    <h1 class="text-3xl font-bold mb-6 text-center">🔍 Capella Product Search</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capella Product Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center px-4 py-6 font-sans">
+  <h1 class="text-3xl font-bold mb-6 text-center">🔍 Capella Product Search</h1>
 
-    <form id="searchForm" class="w-full max-w-md flex gap-2 mb-6">
-      <input
-        id="query"
-        type="text"
-        placeholder="Search products (e.g. mouse, laptop)..."
-        class="flex-1 px-4 py-2 rounded-lg text-black focus:outline-none"
-        required
-      />
-      <button
-        type="submit"
-        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold"
-      >
-        Search
-      </button>
-    </form>
+  <!-- Search Form -->
+  <form id="searchForm" class="w-full max-w-md flex gap-2 mb-6">
+    <input
+      id="query"
+      type="text"
+      placeholder="Search products..."
+      class="flex-1 px-4 py-2 rounded-lg text-black focus:outline-none"
+      required
+    />
+    <button
+      type="submit"
+      class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold"
+    >
+      Search
+    </button>
+  </form>
 
-    <div id="results" class="w-full max-w-4xl grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
+  <!-- Status Message -->
+  <div id="statusMessage" class="mb-4 text-sm text-gray-400 text-center"></div>
 
-    <script>
-      const form = document.getElementById("searchForm");
-      const resultsContainer = document.getElementById("results");
+  <!-- Results -->
+  <div id="results" class="w-full max-w-4xl grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const query = document.getElementById("query").value.trim();
-        const API_BASE_URL = "https://capella-search-api.glitch.me";
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner" class="hidden text-center mt-8">
+    <div class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+    <p class="text-sm mt-2 text-gray-400">Loading...</p>
+  </div>
 
-        if (!query) return;
+  <!-- No Results -->
+  <div id="emptyState" class="hidden text-center mt-8">
+    <p class="text-red-400 text-sm">No products found.</p>
+  </div>
 
-        resultsContainer.innerHTML = `<p class="text-gray-400">Searching for "<strong>${query}</strong>"...</p>`;
+  <script>
+    const form = document.getElementById("searchForm");
+    const queryInput = document.getElementById("query");
+    const resultsContainer = document.getElementById("results");
+    const loadingSpinner = document.getElementById("loadingSpinner");
+    const emptyState = document.getElementById("emptyState");
+    const statusMessage = document.getElementById("statusMessage");
 
-        try {
-          const res = await fetch(`${API_BASE_URL}/search?q=` + encodeURIComponent(query));
-          const data = await res.json();
+    const API_BASE_URL = "https://capella-search-api.glitch.me";
 
-          if (!data.length) {
-            resultsContainer.innerHTML = `<p class="text-red-400">No products found.</p>`;
-            return;
-          }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const query = queryInput.value.trim();
+      if (!query) return;
 
-          resultsContainer.innerHTML = data.map(item => `
-            <div class="bg-white text-black p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-              <h2 class="text-xl font-bold mb-2">${item.name}</h2>
-              <p class="text-sm text-gray-700">Category: ${item.category}</p>
-              <p class="text-sm">Price: ₹${item.price}</p>
-              <p class="text-sm">Rating: ⭐ ${item.rating}</p>
-              <p class="text-sm text-green-600">In Stock: ${item.stock}</p>
-            </div>
-          `).join("");
-        } catch (err) {
-          resultsContainer.innerHTML = `<p class="text-red-500">Error fetching results. Try again.</p>`;
-          console.error(err);
+      resultsContainer.innerHTML = "";
+      emptyState.classList.add("hidden");
+      loadingSpinner.classList.remove("hidden");
+      statusMessage.innerText = "";
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        loadingSpinner.classList.add("hidden");
+
+        if (!data.length) {
+          emptyState.classList.remove("hidden");
+          statusMessage.innerHTML = `No results for "<span class="text-yellow-300">${query}</span>"`;
+          return;
         }
-      });
-    </script>
-  </body>
+
+        statusMessage.innerHTML = `Showing ${data.length} result(s) for "<span class="text-yellow-300">${query}</span>"`;
+
+        resultsContainer.innerHTML = data.map(item => `
+          <div class="bg-white text-black p-4 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-2">${item.name}</h2>
+            <p class="text-sm text-gray-700">Category: ${item.category}</p>
+            <p class="text-sm">Price: ₹${item.price}</p>
+            <p class="text-sm">Rating: ⭐ ${item.rating}</p>
+            <p class="text-sm text-green-600">In Stock: ${item.stock}</p>
+          </div>
+        `).join("");
+      } catch (err) {
+        loadingSpinner.classList.add("hidden");
+        statusMessage.innerHTML = `<span class="text-red-500">Error fetching results. Try again later.</span>`;
+        console.error(err);
+      }
+    });
+  </script>
+</body>
 </html>
