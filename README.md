@@ -1,48 +1,105 @@
-<<<<<<< HEAD
-# Hello Node!
 
-This project includes a Node.js server script and a web page that connects to it. The front-end page presents a form the visitor can use to submit a color name, sending the submitted value to the back-end API running on the server. The server returns info to the page that allows it to update the display with the chosen color. 🎨
+# Couchbase Capella Product Demo 🛒
 
-[Node.js](https://nodejs.org/en/about/) is a popular runtime that lets you run server-side JavaScript. This project uses the [Fastify](https://www.fastify.io/) framework and explores basic templating with [Handlebars](https://handlebarsjs.com/).
+A full-stack Node.js web application demonstrating a product listing and search interface powered by **Couchbase Capella** as the backend NoSQL database. Originally developed and hosted on **Glitch**, the project was later migrated to **Render** for more scalable deployment.
 
-_Last updated: 14 August 2023_
+This app showcases dynamic product data fetching, querying using Couchbase's SQL-like **N1QL** language, and rendering product information with server-side templating via **Handlebars**.
 
-## Prerequisites
+## 🌐 Live Demo
 
-You'll get best use out of this project if you're familiar with basic JavaScript. If you've written JavaScript for client-side web pages this is a little different because it uses server-side JS, but the syntax is the same!
+🔗 [View Deployed App on Render](https://couchbase-capella-product-demo.onrender.com/)
 
-## What's in this project?
+---
 
-← `README.md`: That’s this file, where you can tell people what your cool website does and how you built it.
+## 🧰 Tech Stack & Tools Used
 
-← `public/style.css`: The styling rules for the pages in your site.
+| Tool | Description |
+|------|-------------|
+| **Node.js** | JavaScript runtime used for writing backend APIs and server logic. |
+| **Fastify** | Lightweight and performant Node.js web framework used to build the API layer. |
+| **Handlebars (hbs)** | Server-side templating engine to render dynamic HTML views. |
+| **Couchbase Capella** | Managed NoSQL cloud database. Used to store and query product data using **N1QL** (SQL for JSON). |
+| **Render** | Cloud hosting platform used for deploying and serving the application. |
+| **Glitch** (initially) | Previously used for prototyping and development in-browser before Render migration. _(Glitch hosting deprecated July 8, 2024)_ |
+| **GitHub** | Used for version control and project collaboration. SSH setup enabled for seamless code pushing. |
 
-← `server.js`: The **Node.js** server script for your new site. The JavaScript defines the endpoints in the site back-end, one to return the homepage and one to update with the submitted color. Each one sends data to a Handlebars template which builds these parameter values into the web page the visitor sees.
+---
 
-← `package.json`: The NPM packages for your project's dependencies.
+## 📂 Project Structure
 
-← `src/`: This folder holds the site template along with some basic data files.
+```bash
+.
+├── public/                 # Static assets (CSS, JS, images)
+├── src/
+│   ├── pages/              # Handlebars (.hbs) templates
+│   ├── colors.json         # Sample color metadata (legacy demo content)
+│   └── seo.json            # SEO configuration for the website
+├── server.js               # Main backend server (Fastify app with routes)
+├── package.json            # Dependencies and project metadata
+├── README.md               # You’re reading it!
+```
 
-← `src/pages/index.hbs`: This is the main page template for your site. The template receives parameters from the server script, which it includes in the page HTML. The page sends the user submitted color value in the body of a request, or as a query parameter to choose a random color.
+---
 
-← `src/colors.json`: A collection of CSS color names. We use this in the server script to pick a random color, and to match searches against color names.
+## 🔑 Features Implemented
 
-← `src/seo.json`: When you're ready to share your new site or add a custom domain, change SEO/meta settings in here.
+- Product catalog and dynamic rendering using server-side templates
+- Integration with Couchbase Capella to fetch and filter product data
+- Querying via N1QL (SQL for JSON) for real-time product filtering
+- Responsive deployment on Render with managed environment variables
 
-## Try this next 🏗️
+---
 
-Take a look in `TODO.md` for next steps you can try out in your new site!
+## 📌 Setup & Deployment Instructions
 
-___Want a minimal version of this project to build your own Node.js app? Check out [Blank Node](https://glitch.com/edit/#!/remix/glitch-blank-node)!___
+### 🚀 Local Setup
 
-![Glitch](https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2FLogo_Color.svg?v=1602781328576)
+1. Clone the repository  
+   `git clone git@github.com:aniket-shaha/couchbase-capella-product-demo.git`
 
-## You built this with Glitch!
+2. Navigate to the project  
+   `cd couchbase-capella-product-demo`
 
-[Glitch](https://glitch.com) is a friendly community where millions of people come together to build web apps and websites.
+3. Install dependencies  
+   `npm install`
 
-- Need more help? [Check out our Help Center](https://help.glitch.com/) for answers to any common questions.
-- Ready to make it official? [Become a paid Glitch member](https://glitch.com/pricing) to boost your app with private sharing, more storage and memory, domains and more.
-=======
-# couchbase-capella-product-demo
->>>>>>> 00a133efc2cbc8a8af367746b253c859620b8bb9
+4. Add a `.env` file with Couchbase credentials:
+   ```
+   DB_USERNAME=your-username
+   DB_PASSWORD=your-password
+   DB_ENDPOINT=your-endpoint
+   DB_BUCKET=your-bucket
+   ```
+
+5. Start the app locally  
+   `node server.js`
+
+### 🌍 Deploy to Render
+
+- Connect the repo on [dashboard.render.com](https://dashboard.render.com/)
+- Configure environment variables in Render dashboard
+- Deploy and enjoy the hosted version
+
+---
+
+## 🧠 What I Learned
+
+- Building full-stack apps using Node.js and Fastify
+- Working with Couchbase Capella and querying JSON using N1QL
+- Deploying scalable apps via Render and managing secure environment variables
+- Migrating from Glitch to Render due to hosting deprecation
+
+---
+
+## 📎 References
+
+- [Couchbase Capella Docs](https://docs.couchbase.com/cloud/)
+- [Fastify Framework](https://www.fastify.io/)
+- [Render Deployment Guide](https://render.com/docs/deploy-node-express-app)
+- [Handlebars.js](https://handlebarsjs.com/)
+
+---
+
+## 👋 About
+
+This project was created by **Aniket Shaha** as part of a learning initiative to explore modern NoSQL cloud databases and hands-on cloud deployments.
